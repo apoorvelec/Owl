@@ -9,10 +9,10 @@ public class RecursiveDescentParser implements IRegexParser{
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		RecursiveDescentParser parser = new RecursiveDescentParser("*(a+b)");
+		RecursiveDescentParser parser = new RecursiveDescentParser("a.b");
 		ITreeNode root = parser.parse();
 		IFiniteAutomata nfa = root.GetEquivalentNFA();
-		Boolean ans = nfa.matchesString("aa");
+		Boolean ans = nfa.matchesString("ab");
 		System.out.println(ans);
 		ans = nfa.matchesString("abab");
 		System.out.println(ans);
