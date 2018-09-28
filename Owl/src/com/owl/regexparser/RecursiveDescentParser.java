@@ -1,18 +1,24 @@
 package com.owl.regexparser;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import com.owl.automata.IFiniteAutomata;
 import com.owl.trees.*;
 
 public class RecursiveDescentParser implements IRegexParser{
+	
+	private static final HashSet<Character> _keyWords = 
+			new HashSet<Character>(Arrays.asList('+', '.', '*', '(', ')'));
 
 	private String _input;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		RecursiveDescentParser parser = new RecursiveDescentParser("a.a");
+		RecursiveDescentParser parser = new RecursiveDescentParser("a.b.c.d");
 		ITreeNode root = parser.parse();
 		IFiniteAutomata nfa = root.GetEquivalentNFA();
-		Boolean ans = nfa.matchesString("ab");
+		Boolean ans = nfa.matchesString("z");
 		System.out.println(ans);
 		ans = nfa.matchesString("abab");
 		System.out.println(ans);
@@ -75,18 +81,22 @@ public class RecursiveDescentParser implements IRegexParser{
 			//eatNextCharacterInString(); //eats '('
 			node = REGEX();
 			eatNextCharacterInString(); //eats ')'
-		}else if( (nextCharacterInput.equals("a")||
-				nextCharacterInput.equals("b")||
-				nextCharacterInput.equals("c")||
-				nextCharacterInput.equals(""))){
-			//String nextCharacter = eatNextCharacterInString(); //eats next alphabet
-			return new ParseTreeSingleValueNode(nextCharacterInput);
 		}else if(nextCharacterInput.equals("*")){
 			//eatNextCharacterInString(); //eats '*'
 			node = FACTOR();
 			return new ParseTreeSTARNode(node);
+		}else if(!_keyWords.contains((Character)nextCharacterInput.charAt(0))){
+			node = ALPHABET(nextCharacterInput);
 		}
 		return node;
+	}
+	
+	public ParseTreeNode ALPHABET(String nextCharacterInput){
+		ParseTreeNode node = null;
+		if(nextCharacterInput.equals("#")){
+			nextCharacterInput = eatNextCharacterInString(); //eats next char
+		}
+		return new ParseTreeSingleValueNode(nextCharacterInput);
 	}
 
 }

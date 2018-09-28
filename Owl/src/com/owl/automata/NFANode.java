@@ -9,6 +9,7 @@ public class NFANode {
 	public HashMap<Character, ArrayList<NFANode>> _onCharInput;
 	public boolean _isFinalNode;
 	private int _nodeID;
+	private Boolean _stringMatchResultedInDeadNode;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -36,6 +37,7 @@ public class NFANode {
 	}
 	
 	public boolean matches(String s){
+		this._stringMatchResultedInDeadNode = false;
 		return matches(s, new ArrayList<NFANode>());
 	}
 	
@@ -87,6 +89,61 @@ public class NFANode {
 				//System.out.println("Handled Exception");
 			}
 			
+			//Add dead end code here
+			//if there are no possible c transitions AND if there are
+			//no more epsilon transitions as well, then we have reached a dead state.
+			//if there are some epsilon transitions, check if each epsilon-transition
+			//node is a dead node for Character c input. if it is then this is truly
+			//a dead node.
+			if(s!=null && s.length()>0){ 
+				ArrayList<NFANode> nextNodesOnCharInput = this._onCharInput.get(c);
+				ArrayList<NFANode> nextNodesOnEpsilonInput = this._onCharInput.get(Character.MIN_VALUE);
+				
+				if((nextNodesOnCharInput == null || 
+						(nextNodesOnCharInput!=null && 
+						nextNodesOnCharInput.size() == 0))
+						&&
+						(nextNodesOnEpsilonInput == null || 
+						(nextNodesOnEpsilonInput!=null && 
+						nextNodesOnEpsilonInput.size() == 0))){
+					
+					//This means that we can go nowhere from the current node.
+					//So this is a dead node
+					this._stringMatchResultedInDeadNode = true;/*else{
+						this._stringMatchResultedInDeadNode = true;
+						for(NFANode node: this._onCharInput.get(Character.MIN_VALUE)){
+							if(node!=null){
+								this._stringMatchResultedInDeadNode = this._stringMatchResultedInDeadNode 
+										&& node.stringMatchResultedInDeadNode();
+							}
+							
+						}
+					}*/
+					
+				}else{
+					this._stringMatchResultedInDeadNode = true;
+					try{
+						for(NFANode node: this._onCharInput.get(Character.MIN_VALUE)){
+							this._stringMatchResultedInDeadNode = this._stringMatchResultedInDeadNode
+									&& node.stringMatchResultedInDeadNode();
+						}
+					}catch(Exception e){
+						//e.printStackTrace();
+						//System.out.println("Handled Exception");
+					}
+					
+					try{
+						for(NFANode node: this._onCharInput.get(c)){
+							this._stringMatchResultedInDeadNode = this._stringMatchResultedInDeadNode
+									&& node.stringMatchResultedInDeadNode();
+						}
+					}catch(Exception e){
+						//e.printStackTrace();
+						//System.out.println("Handled Exception");
+					}
+				}
+			}
+			
 			return false;
 		}
 	}
@@ -105,6 +162,10 @@ public class NFANode {
 	@Override
 	public int hashCode(){
 		return this._nodeID;
+	}
+	
+	public Boolean stringMatchResultedInDeadNode(){
+		return this._stringMatchResultedInDeadNode;
 	}
 
 }

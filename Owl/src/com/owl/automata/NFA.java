@@ -4,6 +4,7 @@ public class NFA implements IFiniteAutomata{
 
 	NFANode _startNode;
 	NFANode _endNode;
+	Boolean _stringMatchHitDeadNode;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -23,7 +24,14 @@ public class NFA implements IFiniteAutomata{
 	
 	@Override
 	public Boolean matchesString(String s){
-		return this._startNode.matches(s);
+		this._stringMatchHitDeadNode = false;
+		Boolean result = this._startNode.matches(s);
+		this._stringMatchHitDeadNode = this._startNode.stringMatchResultedInDeadNode();
+		return result;
+	}
+	
+	public Boolean stringSearchHitDeadNode(){
+		return this._stringMatchHitDeadNode;
 	}
 	
 	public static NFA constructSingleCharacterNFA(Character c){
@@ -37,10 +45,24 @@ public class NFA implements IFiniteAutomata{
 	}
 	
 	public static NFA constructRepetitionNFA(NFA nfa){
+		//Character epsilon = Character.MIN_VALUE;
+		//nfa._startNode.addCharacterEdge(epsilon, nfa._endNode);
+		//nfa._endNode.addCharacterEdge(epsilon, nfa._startNode);
+		//return nfa;
+		
+		NFANode start = new NFANode();
+		NFANode end = new NFANode();
+		
 		Character epsilon = Character.MIN_VALUE;
-		nfa._startNode.addCharacterEdge(epsilon, nfa._endNode);
+		
+		start.addCharacterEdge(epsilon, nfa._startNode);
+		start.addCharacterEdge(epsilon, end);
 		nfa._endNode.addCharacterEdge(epsilon, nfa._startNode);
-		return nfa;
+		nfa._endNode.addCharacterEdge(epsilon, end);
+		nfa._endNode._isFinalNode = false;
+		end._isFinalNode = true;
+		
+		return new NFA(start, end);
 	}
 	
 	public static NFA constructORNFA(NFA nfa1, NFA nfa2){
@@ -68,7 +90,7 @@ public class NFA implements IFiniteAutomata{
 		
 		Character epsilon = Character.MIN_VALUE;
 		
-		start.addCharacterEdge(epsilon, nfa1._startNode);
+		start.addCharacterEdge(epsilon, nfa1._startNode); //this is not needed probably
 		nfa1._endNode._isFinalNode = false;
 		nfa1._endNode.addCharacterEdge(epsilon, nfa2._startNode);
 		nfa2._endNode._isFinalNode = false;

@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.Assert;
 import com.owl.main.*;
 
-public class RegexMatcherTests {
+public class RegexMatcherTests{
 	
 	private static RegexMatcher _regexMatcher1;
 	private static RegexMatcher _regexMatcher2;
@@ -43,6 +43,10 @@ public class RegexMatcherTests {
 		_regexMatcher8 = new RegexMatcher("**a");
 		_regexMatcher9 = new RegexMatcher("(a).(b)");
 		_regexMatcher10 = new RegexMatcher("(a.(b))");
+		_regexMatcher11 = new RegexMatcher("d");
+		_regexMatcher12 = new RegexMatcher("#(");
+		_regexMatcher13 = new RegexMatcher("a+b+c+d");
+		_regexMatcher14 = new RegexMatcher("(*(*a)).b");
 	}
 
 	@AfterClass
@@ -622,4 +626,128 @@ public class RegexMatcherTests {
 	}
 	
 	/////////////////////// END REGEX : "(a.(b))" ///////////////////////////
+	
+	/////////////////////// REGEX : "d" ///////////////////////////
+	
+	@Test
+	public void regex11test1(){
+		String inputString = "d";
+		assertEquals(true, _regexMatcher11.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex11test2(){
+		String inputString = "z";
+		assertEquals(false, _regexMatcher11.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex11test3(){
+		String inputString = "D";
+		assertEquals(false, _regexMatcher11.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex11test4(){
+		String inputString = " ";
+		assertEquals(false, _regexMatcher11.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex11test5(){
+		String inputString = " d";
+		assertEquals(false, _regexMatcher11.matchesString(inputString));
+	}
+	
+	/////////////////////// END REGEX : "d" ///////////////////////////
+	
+	/////////////////////// REGEX : "#(" ///////////////////////////
+	
+	@Test
+	public void regex12test1(){
+		String inputString = "(";
+		assertEquals(true, _regexMatcher12.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex12test2(){
+		String inputString = " (";
+		assertEquals(false, _regexMatcher12.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex12test3(){
+		String inputString = "a";
+		assertEquals(false, _regexMatcher12.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex12test4(){
+		String inputString = " ( ";
+		assertEquals(false, _regexMatcher12.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex12test5(){
+		String inputString = "( ";
+		assertEquals(false, _regexMatcher12.matchesString(inputString));
+	}
+	
+	/////////////////////// END REGEX : "#(" ///////////////////////////
+	
+	/////////////////////// REGEX : "a+b+c+d" ///////////////////////////
+	
+	@Test
+	public void regex13test1(){
+		String inputString = "a";
+		assertEquals(true, _regexMatcher13.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex13test2(){
+		String inputString = "b";
+		assertEquals(true, _regexMatcher13.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex13test3(){
+		String inputString = "c";
+		assertEquals(true, _regexMatcher13.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex13test4(){
+		String inputString = "d";
+		assertEquals(true, _regexMatcher13.matchesString(inputString));
+	}
+	
+	/////////////////////// END REGEX : "a+b+c+d" ///////////////////////////
+	
+	/////////////////////// REGEX : "(*(*a)).b" ///////////////////////////
+	
+	@Test
+	public void regex14test1(){
+		String inputString = "ab";
+		assertEquals(true, _regexMatcher14.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex14test2(){
+		String inputString = "aab";
+		assertEquals(true, _regexMatcher14.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex14test3(){
+		String inputString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+		assertEquals(false, _regexMatcher14.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex14test4(){
+		String inputString = "";
+		assertEquals(false, _regexMatcher14.matchesString(inputString));
+	}
+	
+	/////////////////////// END REGEX : "(*(*a)).b" ///////////////////////////
 }
