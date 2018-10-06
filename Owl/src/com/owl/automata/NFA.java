@@ -45,10 +45,12 @@ public class NFA implements IFiniteAutomata{
 	}
 	
 	public static NFA constructRepetitionNFA(NFA nfa){
+		///////// OLD CODE ////////////////////////
 		//Character epsilon = Character.MIN_VALUE;
 		//nfa._startNode.addCharacterEdge(epsilon, nfa._endNode);
 		//nfa._endNode.addCharacterEdge(epsilon, nfa._startNode);
 		//return nfa;
+		///////////////////////////////////////////
 		
 		NFANode start = new NFANode();
 		NFANode end = new NFANode();
