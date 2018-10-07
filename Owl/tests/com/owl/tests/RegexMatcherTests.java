@@ -47,6 +47,11 @@ public class RegexMatcherTests{
 		_regexMatcher12 = new RegexMatcher("#(");
 		_regexMatcher13 = new RegexMatcher("a+b+c+d");
 		_regexMatcher14 = new RegexMatcher("(*(*a)).b");
+		_regexMatcher15 = new RegexMatcher("[a-z]");
+		_regexMatcher16 = new RegexMatcher("[!-##]"); // from ! to #
+		_regexMatcher17 = new RegexMatcher("[!-<]");
+		_regexMatcher18 = new RegexMatcher("*[a-z]");
+		_regexMatcher19 = new RegexMatcher("A.([a-z])");
 	}
 
 	@AfterClass
@@ -750,4 +755,151 @@ public class RegexMatcherTests{
 	}
 	
 	/////////////////////// END REGEX : "(*(*a)).b" ///////////////////////////
+	
+	/////////////////////// REGEX : "[a-z]" ///////////////////////////
+	
+	@Test
+	public void regex15test1(){
+		String inputString = "a";
+		assertEquals(true, _regexMatcher15.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex15test2(){
+		String inputString = "z";
+		assertEquals(true, _regexMatcher15.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex15test3(){
+		String inputString = "";
+		assertEquals(false, _regexMatcher15.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex15test4(){
+		String inputString = "A";
+		assertEquals(false, _regexMatcher15.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex15test5(){
+		String inputString = " ";
+		assertEquals(false, _regexMatcher15.matchesString(inputString));
+	}
+	
+	/////////////////////// END REGEX : "[a-z]" ///////////////////////////
+	
+	/////////////////////// REGEX : "[!-##]" ///////////////////////////
+	
+	@Test
+	public void regex16test1(){
+		String inputString = "";
+		assertEquals(false, _regexMatcher16.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex16test2(){
+		String inputString = "!";
+		assertEquals(true, _regexMatcher16.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex16test3(){
+		String inputString = "\"";
+		assertEquals(true, _regexMatcher16.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex16test4(){
+		String inputString = "#";
+		assertEquals(true, _regexMatcher16.matchesString(inputString));
+	}
+	
+	/////////////////////// END REGEX : "[!-##]" ///////////////////////////
+	
+	/////////////////////// REGEX : "[!-<]" ///////////////////////////
+	
+	@Test
+	public void regex17test1(){
+		String inputString = "";
+		assertEquals(false, _regexMatcher17.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex17test2(){
+		String inputString = "+";
+		assertEquals(true, _regexMatcher17.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex17test3(){
+		String inputString = "-";
+		assertEquals(true, _regexMatcher17.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex17test4(){
+		String inputString = ".";
+		assertEquals(true, _regexMatcher17.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex17test5(){
+		String inputString = "*";
+		assertEquals(true, _regexMatcher17.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex17test6(){
+		String inputString = " ";
+		assertEquals(false, _regexMatcher17.matchesString(inputString));
+	}
+	
+	/////////////////////// END REGEX : "[!-<]" ///////////////////////////
+	
+	/////////////////////// REGEX : "*[a-z]" ///////////////////////////
+	
+	@Test
+	public void regex18test1(){
+		String inputString = "";
+		assertEquals(true, _regexMatcher18.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex18test2(){
+		String inputString = "a";
+		assertEquals(true, _regexMatcher18.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex18test3(){
+		String inputString = "z";
+		assertEquals(true, _regexMatcher18.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex18test4(){
+		String inputString = "aa";
+		assertEquals(true, _regexMatcher18.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex18test5(){
+		String inputString = "abdlvlmdsdlmz";
+		assertEquals(true, _regexMatcher18.matchesString(inputString));
+	}
+	@Test
+	public void regex18test6(){
+		String inputString = " ";
+		assertEquals(false, _regexMatcher18.matchesString(inputString));
+	}
+	
+	@Test
+	public void regex18test7(){
+		String inputString = "A";
+		assertEquals(false, _regexMatcher18.matchesString(inputString));
+	}
+	
+	/////////////////////// END REGEX : "*[a-z]" ///////////////////////////
 }

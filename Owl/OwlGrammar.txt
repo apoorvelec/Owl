@@ -1,4 +1,4 @@
 REGEX → TERM '+' REGEX | TERM
 TERM → FACTOR '.' TERM | FACTOR
-FACTOR → ALPHABET | '*' FACTOR | '('REGEX')' // | '[' ALPHABET '-' ALPHABET ']'
+FACTOR → ALPHABET | '*' FACTOR | '('REGEX')' | '[' ALPHABET '-' ALPHABET ']'
 ALPHABET → a | b | c | ... | ɛ

@@ -9,18 +9,18 @@ import com.owl.trees.*;
 public class RecursiveDescentParser implements IRegexParser{
 	
 	private static final HashSet<Character> _keyWords = 
-			new HashSet<Character>(Arrays.asList('+', '.', '*', '(', ')'));
+			new HashSet<Character>(Arrays.asList('+', '.', '*', '(', ')', '#', '[', ']', '-'));
 
 	private String _input;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		RecursiveDescentParser parser = new RecursiveDescentParser("a.b.c.d");
+		RecursiveDescentParser parser = new RecursiveDescentParser("[!-##]");
 		ITreeNode root = parser.parse();
 		IFiniteAutomata nfa = root.GetEquivalentNFA();
-		Boolean ans = nfa.matchesString("z");
+		Boolean ans = nfa.matchesString("#");
 		System.out.println(ans);
-		ans = nfa.matchesString("abab");
+		ans = nfa.matchesString("a");
 		System.out.println(ans);
 	}
 	
@@ -85,7 +85,47 @@ public class RecursiveDescentParser implements IRegexParser{
 			//eatNextCharacterInString(); //eats '*'
 			node = FACTOR();
 			return new ParseTreeSTARNode(node);
-		}else if(!_keyWords.contains((Character)nextCharacterInput.charAt(0))){
+		}else if(nextCharacterInput.equals("[")){
+			
+			// fromChar variable value may be different 
+			// than the value held by fromCharNode in the 
+			// case when regex pattern contains character escaping
+			String fromChar = eatNextCharacterInString();
+			ParseTreeNode fromCharNode = ALPHABET(fromChar);
+			
+			String dash = eatNextCharacterInString();
+			
+			String toChar = eatNextCharacterInString();
+			ParseTreeNode toCharNode = ALPHABET(toChar);
+			
+			int fromCharAscii = fromCharNode.GetValue().charAt(0);
+			int toCharAscii = toCharNode.GetValue().charAt(0);
+			if(fromCharAscii<=toCharAscii){
+				String regexPattern = "";
+				if(!this._keyWords.contains(fromCharNode.GetValue().charAt(0))){
+					regexPattern = Character.toString((char)fromCharAscii);
+				}else{
+					regexPattern = "#"+
+							Character.toString((char)fromCharAscii);
+				}
+				
+				fromCharAscii++;
+				while(fromCharAscii<=toCharAscii){
+					if(!this._keyWords.contains((char)fromCharAscii)){
+						regexPattern += "+" + Character.toString((char)fromCharAscii);
+					}else{
+						regexPattern += "+#" + Character.toString((char)fromCharAscii);
+					}
+					
+					fromCharAscii++;
+				}
+				
+				RecursiveDescentParser parser = new RecursiveDescentParser(regexPattern);
+				node = (ParseTreeNode) parser.parse();
+			}
+			eatNextCharacterInString(); // eats ']'
+		}else if(!_keyWords.contains((Character)nextCharacterInput.charAt(0))
+				|| nextCharacterInput.charAt(0)=='#'){
 			node = ALPHABET(nextCharacterInput);
 		}
 		return node;
