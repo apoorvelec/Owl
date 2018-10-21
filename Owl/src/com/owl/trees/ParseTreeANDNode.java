@@ -45,7 +45,7 @@ public class ParseTreeANDNode extends ParseTreeNode{
 	@Override
 	public String GetValue() {
 		// TODO Auto-generated method stub
-		return null;
+		return ".";
 	}
 
 	@Override
